@@ -1,0 +1,69 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link href="#{facesContext.externalContext.requestContextPath}/css/default.css" rel="stylesheet" type="text/css" />        
+        <title>Sistema Corretor Ato Cotepe</title>
+        <script type="text/javascript">
+            function disabledButton(){
+                jQuery(document).ready(function(){
+                    jQuery( "#correcaoBtn" ).addClass("ui-state-disabled");
+                });
+            }
+        </script>
+        <script type="text/javascript">  
+            function start() {  
+                statusDialog.show();  
+            }  
+  
+            function stop() {  
+                statusDialog.hide();  
+            }  
+        </script> 
+    </h:head>
+
+    <h:body>
+
+        <div id="top" class="top">
+            <h:panelGrid columns="2"> 
+                <h:graphicImage width="150" height="80" value="/imagens/logo-ourobits.jpg"/> 
+                <h:outputText style="font-size: 18px" value="Sistema Corretor Ato Cotepe"/>
+             </h:panelGrid>
+        </div>
+
+        <div id="content" class="center_content">
+            <p:dialog modal="true" widgetVar="statusDialog" header="Aguarde o Processamento..." draggable="false" closable="false" resizable="false">  
+                <p:graphicImage value="/imagens/ajaxloadingbar.gif" />  
+            </p:dialog> 
+            <h:form id="corretorForm" prependId="false" enctype="multipart/form-data">
+                <p:panel header="Corretor Ato Cotepe">
+                    <p:messages />
+                    <h:panelGrid>
+                        <h:outputText value="Localize o arquivo"/>
+                        <p:fileUpload value="#{correcaoController.file}" 
+                                      mode="simple"    
+                                      />
+                        <h:outputText value=""/>
+                        <p:commandButton id="correcaoBtn" onclick="disabledButton();PrimeFaces.monitorDownload(start, stop)" ajax="false" value="Aplicar Correção" action="#{correcaoController.upload()}" />
+
+                    </h:panelGrid>
+                </p:panel>
+                <hr/>
+                <h:outputText style="font-size: 20px" value="Resultado:"/><br/><br/>
+                <h:outputText value="#{correcaoController.textoRegistros}"/><br/><br/>
+                <p:commandButton id="downloadLink" rendered="#{correcaoController.visivelBotaoDownload}" value="Baixar Arquivo" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)"   
+                                 icon="ui-icon-arrowthichk-s">  
+                    <p:fileDownload value="#{correcaoController.fileDownload}" />  
+                </p:commandButton> 
+            </h:form>
+        </div>
+
+    </h:body>
+
+</html>
